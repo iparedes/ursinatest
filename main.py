@@ -5,6 +5,12 @@ import random
 
 
 app = Ursina()
+window.title = 'My Game'                # The window title
+window.borderless = False               # Show a border
+window.fullscreen = False               # Do not go Fullscreen
+window.exit_button.visible = False      # Do not show the in-game red X that loses the window
+window.fps_counter.enabled = True       # Show the FPS (Frames per second) counter
+
 
 # shifts the camera in a circle whose center is the target
 # ang<0 anticlock. ang>0 clockwise
@@ -87,9 +93,9 @@ def update():   # update gets automatically called.
     if held_keys['e']:
         rotCamXZ(-rotdelta)
 
-    if held_keys['r']:
-        rotCamYZ(rotdelta)
     if held_keys['f']:
+        rotCamYZ(rotdelta)
+    if held_keys['r']:
         rotCamYZ(-rotdelta)
 
 
@@ -135,18 +141,26 @@ curve_renderer = Entity(model=Mesh(vertices=points, mode='line'))
 
 W=world()
 
-for i in range(0,NBODIES):
-    mass=rand_exp(10,20)
-    (x,y,z)=(rand_exp(4,12),rand_exp(4,12),rand_exp(4,12))
-    pos=Vec3(x,y,z)
-    (x,y,z)=(rand_exp(1,4),rand_exp(1,4),rand_exp(1,4))
-    vel=Vec3(x,y,z)
-    name=f"b{i}"
-    b=body(name,mass,pos,vel)
-    W.parts.append(b)
+# for i in range(0,NBODIES):
+#     mass=rand_exp(10,20)
+#     (x,y,z)=(rand_exp(4,16),rand_exp(4,16),rand_exp(4,16))
+#     pos=Vec3(x,y,z)
+#     (x,y,z)=(rand_exp(1,4),rand_exp(1,4),rand_exp(1,4))
+#     vel=Vec3(x,y,z)
+#     name=f"b{i}"
+#     b=body(name,mass,pos,vel)
+#     W.parts.append(b)
 
 b=body("sun",6e26,Vec3(0,0,0),Vec3(0,0,0),color.red)
 W.parts.append(b)
+
+b=body("p1",6e24,Vec3(1e11,0,0),Vec3(0,50000,0),color.white)
+W.parts.append(b)
+
+
+b=body("p1",6e10,Vec3(-1e11,1e11,0),Vec3(25000,-10000,0),color.white)
+W.parts.append(b)
+
 
 # W.parts.append(b1)
 # W.parts.append(b2)
