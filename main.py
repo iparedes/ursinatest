@@ -80,6 +80,18 @@ def update():   # update gets automatically called.
 
     if GO:
         for p in W.parts:
+            for q in W.parts:
+                if p!=q:
+                    d = q.pos - p.pos
+                    m = d.length()
+                    if m< CONTACTD:
+                        p.mass+=q.mass
+                        mp=p.mass*p.vel
+                        mq=q.mass*q.vel
+                        v=(mp*mq)/p.mass
+                        p.vel=v
+                        W.parts.remove(q)
+        for p in W.parts:
             #a = [x * dT / 2 for x in p.acc.data]
             a=p.acc *dT /2
             p.vel = p.vel + a
@@ -87,6 +99,8 @@ def update():   # update gets automatically called.
             #v = vector3([x * dT for x in p.vel.data])
             v=p.vel*dT
             p.pos = p.pos + v
+            p.trail.model.vertices.append(p.ent.position)
+            p.trail.model.generate()
 
             #draw_part(p)
 
@@ -160,27 +174,34 @@ curve_renderer = Entity(model=Mesh(vertices=points, mode='line'))
 
 W=world()
 
-for i in range(0,NBODIES):
-    mass=rand_exp(10,20)
-    (x,y,z)=(rand_exp(4,16),rand_exp(4,16),rand_exp(4,16))
-    pos=Vec3(x,y,z)
-    (x,y,z)=(rand_exp(1,4),rand_exp(1,4),rand_exp(1,4))
-    (x,y,z)=(0,0,0)
-    vel=Vec3(x,y,z)
-    name=f"b{i}"
-    b=body(name,mass,pos,vel)
-    W.parts.append(b)
-
-b=body("sun",6e26,Vec3(0,0,0),Vec3(0,0,0),color.red)
+# for i in range(0,NBODIES):
+#     mass=rand_exp(10,20)
+#     (x,y,z)=(rand_exp(5,10),rand_exp(5,10),rand_exp(5,10))
+#     pos=Vec3(x,y,z)
+#     (x,y,z)=(rand_exp(1,4),rand_exp(1,4),rand_exp(1,4))
+#     (x,y,z)=(0,0,0)
+#     vel=Vec3(x,y,z)
+#     name=f"b{i}"
+#     b=body(name,mass,pos,vel)
+#     W.parts.append(b)
+#
+# b=body("sun",6e26,Vec3(0,0,0),Vec3(0,0,0),color.red)
+# W.parts.append(b)
+#
+# for p in W.parts:
+#     print(p.ent.position)
+#
+b=body("p1",6e24,Vec3(0,0,0),Vec3(0,0,0),color.white)
 W.parts.append(b)
-#
-# b=body("p1",6e24,Vec3(1e11,0,0),Vec3(0,50000,0),color.white)
-# W.parts.append(b)
-#
-#
-# b=body("p1",6e10,Vec3(-1e11,1e11,0),Vec3(25000,-10000,0),color.white)
-# W.parts.append(b)
 
+b=body("p2",6e10,Vec3(-1e8,0,0),Vec3(0,-1000,0),color.white)
+W.parts.append(b)
+
+b=body("p3",6e5,Vec3(1e8,0,0),Vec3(0,1000,0),color.white)
+W.parts.append(b)
+
+b=body("p4",6e5,Vec3(0,1e8,0),Vec3(-1000,0,0),color.white)
+W.parts.append(b)
 
 # W.parts.append(b1)
 # W.parts.append(b2)

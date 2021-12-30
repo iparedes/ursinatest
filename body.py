@@ -12,6 +12,7 @@ class body:
         self.acc=Vec3(0,0,0)
         self.ent=Entity(model='sphere', color=color)
         self.ent.position=self._pos/DFACTOR
+        self.trail=Entity(model=Mesh(vertices=[],mode='point',thickness=0.05,render_points_in_3d=True))
 
     def __str__(self):
         return f"{self.name} pos:{str(self.pos)}, vel:{str(self.vel)}, acc:{str(self.vel)}"
