@@ -185,6 +185,7 @@ W=world()
 #     b=body(name,mass,pos,vel)
 #     W.parts.append(b)
 #
+
 # b=body("sun",6e26,Vec3(0,0,0),Vec3(0,0,0),color.red)
 # W.parts.append(b)
 #

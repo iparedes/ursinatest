@@ -1,6 +1,7 @@
 from vars import *
 from ursina import *
 
+
 class body:
 
     # pos is Vec3
