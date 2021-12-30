@@ -67,6 +67,8 @@ class world:
             if p != q:
                 d = q.pos - p.pos
                 m=d.length()
+                if m==0:
+                    m=0.1
                 denom = m ** (-3)
                 #a = [x * denom * q.mass for x in d.data]
                 a=d*denom*q.mass

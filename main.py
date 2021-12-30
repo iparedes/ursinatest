@@ -3,6 +3,7 @@ from vars import *
 from body import *
 import random
 
+GO=False
 
 app = Ursina()
 window.title = 'My Game'                # The window title
@@ -44,7 +45,7 @@ def rotCamYZ(delta):
     v=camera.position.yz
     d=v.length()
     ang=v.signedAngleRad(Vec2(0,1))
-    print(f"ang: {ang*180/PI}")
+    #print(f"ang: {ang*180/PI}")
     #(d, ang) = vec_mag_ang(camX, camZ)
     newang = ang + delta
 
@@ -53,7 +54,7 @@ def rotCamYZ(delta):
     elif newang > (2 * PI):
         newang = newang - (2 * PI)
 
-    print(f"newang: {newang * 180 / PI}")
+    #print(f"newang: {newang * 180 / PI}")
     newY = d * math.sin(newang)
     newZ = d * math.cos(newang)
 
@@ -61,25 +62,40 @@ def rotCamYZ(delta):
     camera.z = newZ
 
 
+def input(key):
+    global dT
+    global GO
+
+    if key=='p':
+        dT*=10
+        print(dT)
+    if key=='o':
+        dT/=10
+        print(dT)
+    if key=='g':
+        GO= not GO
 
 def update():   # update gets automatically called.
+    global GO
 
-    for p in W.parts:
-        #a = [x * dT / 2 for x in p.acc.data]
-        a=p.acc *dT /2
-        p.vel = p.vel + a
+    if GO:
+        for p in W.parts:
+            #a = [x * dT / 2 for x in p.acc.data]
+            a=p.acc *dT /2
+            p.vel = p.vel + a
 
-        #v = vector3([x * dT for x in p.vel.data])
-        v=p.vel*dT
-        p.pos = p.pos + v
+            #v = vector3([x * dT for x in p.vel.data])
+            v=p.vel*dT
+            p.pos = p.pos + v
 
-        #draw_part(p)
+            #draw_part(p)
 
-        W.update_acc(p)
-        #a = [x * dT / 2 for x in p.acc.data]
-        a=p.acc*dT
-        p.vel = p.vel + Vec3(a)
-    W.T += dT
+            W.update_acc(p)
+            #a = [x * dT / 2 for x in p.acc.data]
+            a=p.acc*dT
+            p.vel = p.vel + Vec3(a)
+        W.T += dT
+
 
     camera.z -= held_keys['x'] * STEP
     camera.z += held_keys['z'] * STEP
@@ -107,10 +123,13 @@ def update():   # update gets automatically called.
 
 
 def rand_exp(minexp,maxexp):
+    sign=random.randint(0,1)
+    if sign==0:
+        sign=-1
     base=random.randint(1,9)
     #base = random.random()*10
     exp=random.randint(minexp,maxexp)
-    return base*pow(10,exp)
+    return sign*base*pow(10,exp)
 
 
 # mass=2e30
@@ -141,25 +160,26 @@ curve_renderer = Entity(model=Mesh(vertices=points, mode='line'))
 
 W=world()
 
-# for i in range(0,NBODIES):
-#     mass=rand_exp(10,20)
-#     (x,y,z)=(rand_exp(4,16),rand_exp(4,16),rand_exp(4,16))
-#     pos=Vec3(x,y,z)
-#     (x,y,z)=(rand_exp(1,4),rand_exp(1,4),rand_exp(1,4))
-#     vel=Vec3(x,y,z)
-#     name=f"b{i}"
-#     b=body(name,mass,pos,vel)
-#     W.parts.append(b)
+for i in range(0,NBODIES):
+    mass=rand_exp(10,20)
+    (x,y,z)=(rand_exp(4,16),rand_exp(4,16),rand_exp(4,16))
+    pos=Vec3(x,y,z)
+    (x,y,z)=(rand_exp(1,4),rand_exp(1,4),rand_exp(1,4))
+    (x,y,z)=(0,0,0)
+    vel=Vec3(x,y,z)
+    name=f"b{i}"
+    b=body(name,mass,pos,vel)
+    W.parts.append(b)
 
 b=body("sun",6e26,Vec3(0,0,0),Vec3(0,0,0),color.red)
 W.parts.append(b)
-
-b=body("p1",6e24,Vec3(1e11,0,0),Vec3(0,50000,0),color.white)
-W.parts.append(b)
-
-
-b=body("p1",6e10,Vec3(-1e11,1e11,0),Vec3(25000,-10000,0),color.white)
-W.parts.append(b)
+#
+# b=body("p1",6e24,Vec3(1e11,0,0),Vec3(0,50000,0),color.white)
+# W.parts.append(b)
+#
+#
+# b=body("p1",6e10,Vec3(-1e11,1e11,0),Vec3(25000,-10000,0),color.white)
+# W.parts.append(b)
 
 
 # W.parts.append(b1)
