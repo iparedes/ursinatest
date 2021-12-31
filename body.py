@@ -63,6 +63,22 @@ class world:
         self.parts = []
         self.T=0
 
+    # inelastic collision for every pair of bodies closer than a threshold
+    def handle_collisions(self):
+        for p in self.parts:
+            for q in self.parts:
+                if p!=q:
+                    d = q.pos - p.pos
+                    m = d.length()
+                    if m< CONTACTD:
+                        p.mass+=q.mass
+                        mp=p.mass*p.vel
+                        mq=q.mass*q.vel
+                        v=(mp*mq)/p.mass
+                        p.vel=v
+                        self.parts.remove(q)
+
+
     def update_acc(self, p):
         p.acc = Vec3(0, 0, 0)
         for q in self.parts:
@@ -78,3 +94,21 @@ class world:
         #p.acc.data = [self.G * x for x in p.acc.data]
         p.acc=self.G*p.acc
 
+    # update positions using kick-drift-kick. https://en.wikipedia.org/wiki/Leapfrog_integration
+    def update_positions(self):
+        for p in self.parts:
+            a=p.acc * dT /2
+            p.vel = p.vel + a
+
+            v=p.vel*dT
+            p.pos = p.pos + v
+
+            # draw trails
+            p.trail.model.vertices.append(p.ent.position)
+            p.trail.model.generate()
+
+            self.update_acc(p)
+
+            a=p.acc*dT
+            p.vel = p.vel + Vec3(a)
+        self.T += dT

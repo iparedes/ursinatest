@@ -61,7 +61,7 @@ def rotCamYZ(delta):
     camera.y = newY
     camera.z = newZ
 
-
+# this seems to work to avoid quick repetition of pressed keys
 def input(key):
     global dT
     global GO
@@ -79,36 +79,11 @@ def update():   # update gets automatically called.
     global GO
 
     if GO:
-        for p in W.parts:
-            for q in W.parts:
-                if p!=q:
-                    d = q.pos - p.pos
-                    m = d.length()
-                    if m< CONTACTD:
-                        p.mass+=q.mass
-                        mp=p.mass*p.vel
-                        mq=q.mass*q.vel
-                        v=(mp*mq)/p.mass
-                        p.vel=v
-                        W.parts.remove(q)
-        for p in W.parts:
-            #a = [x * dT / 2 for x in p.acc.data]
-            a=p.acc *dT /2
-            p.vel = p.vel + a
+        # handle collisions
+        W.handle_collisions()
+        # update positions
+        W.update_positions()
 
-            #v = vector3([x * dT for x in p.vel.data])
-            v=p.vel*dT
-            p.pos = p.pos + v
-            p.trail.model.vertices.append(p.ent.position)
-            p.trail.model.generate()
-
-            #draw_part(p)
-
-            W.update_acc(p)
-            #a = [x * dT / 2 for x in p.acc.data]
-            a=p.acc*dT
-            p.vel = p.vel + Vec3(a)
-        W.T += dT
 
 
     camera.z -= held_keys['x'] * STEP
@@ -203,6 +178,10 @@ W.parts.append(b)
 
 b=body("p4",6e5,Vec3(0,1e8,0),Vec3(-1000,0,0),color.white)
 W.parts.append(b)
+
+b=body("p5",6e26,Vec3(0,-1e10,0),Vec3(0,0,0),color.white)
+W.parts.append(b)
+
 
 # W.parts.append(b1)
 # W.parts.append(b2)
