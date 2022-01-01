@@ -62,6 +62,7 @@ class world:
         self.G = 6.6743e-11
         self.parts = []
         self.T=0
+        self.dT=dT
 
     # inelastic collision for every pair of bodies closer than a threshold
     def handle_collisions(self):
@@ -97,18 +98,20 @@ class world:
     # update positions using kick-drift-kick. https://en.wikipedia.org/wiki/Leapfrog_integration
     def update_positions(self):
         for p in self.parts:
-            a=p.acc * dT /2
+            a=p.acc * self.dT /2
             p.vel = p.vel + a
 
-            v=p.vel*dT
+            v=p.vel*self.dT
             p.pos = p.pos + v
 
             # draw trails
             p.trail.model.vertices.append(p.ent.position)
+            if len(p.trail.model.vertices)>30:
+                p.trail.model.vertices.pop(0)
             p.trail.model.generate()
 
             self.update_acc(p)
 
-            a=p.acc*dT
+            a=p.acc*self.dT
             p.vel = p.vel + Vec3(a)
-        self.T += dT
+        self.T += self.dT

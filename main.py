@@ -63,14 +63,14 @@ def rotCamYZ(delta):
 
 # this seems to work to avoid quick repetition of pressed keys
 def input(key):
-    global dT
+    global W
     global GO
 
     if key=='p':
-        dT*=10
+        W.dT*=10
         print(dT)
     if key=='o':
-        dT/=10
+        W.dT/=10
         print(dT)
     if key=='g':
         GO= not GO
@@ -173,14 +173,26 @@ W.parts.append(b)
 b=body("p2",6e10,Vec3(-1e8,0,0),Vec3(0,-1000,0),color.white)
 W.parts.append(b)
 
-b=body("p3",6e5,Vec3(1e8,0,0),Vec3(0,1000,0),color.white)
+b=body("p3",6e23,Vec3(8e8,0,0),Vec3(-500,500,0),color.white)
 W.parts.append(b)
 
-b=body("p4",6e5,Vec3(0,1e8,0),Vec3(-1000,0,0),color.white)
+b=body("p4",6e20,Vec3(0,1e8,0),Vec3(-800,0,0),color.white)
 W.parts.append(b)
 
-b=body("p5",6e26,Vec3(0,-1e10,0),Vec3(0,0,0),color.white)
+b=body("p5",6e8,Vec3(1e7,1e7,1e7),Vec3(0,5000,0),color.white)
 W.parts.append(b)
+
+b=body("p6",6e12,Vec3(2e8,0,0),Vec3(20,400,0),color.white)
+W.parts.append(b)
+
+b=body("p7",6e12,Vec3(3e8,0,0),Vec3(10,400,0),color.white)
+W.parts.append(b)
+
+
+
+
+#b=body("p5",6e26,Vec3(0,-1e10,0),Vec3(0,0,0),color.white)
+#W.parts.append(b)
 
 
 # W.parts.append(b1)
